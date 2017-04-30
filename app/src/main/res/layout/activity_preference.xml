@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="20dp" >
+
+
+        <TextView
+            android:id="@+id/textViewSSID"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="SSID" />
+
+        <EditText
+            android:id="@+id/editTextSSID"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10" />
+
+        <TextView
+            android:id="@+id/textViewPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:password="false"
+            android:text="Password" />
+
+        <EditText
+            android:id="@+id/editTextPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:password="true" />
+
+        <TextView
+            android:id="@+id/textViewAccountID"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="AWS Account ID" />
+
+        <EditText
+            android:id="@+id/editTextAccountID"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10" />
+
+        <TextView
+            android:id="@+id/textViewPoolID"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="User Pool ID" />
+
+        <EditText
+            android:id="@+id/editTextUserPoolID"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10" />
+
+        <TextView
+            android:id="@+id/textViewPoolRegion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Region" />
+
+        <EditText
+            android:id="@+id/editTextPoolRegion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10" />
+
+        <TextView
+            android:id="@+id/textViewUnauthARN"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Unauth Role ARN" />
+
+        <EditText
+            android:id="@+id/editTextUnauthRoleARN"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10" />
+
+        <TextView
+            android:id="@+id/textViewAuthARN"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Auth Role ARN" />
+
+        <EditText
+            android:id="@+id/editTextAuthRoleARN"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10" />
+
+        <TextView
+            android:id="@+id/textViewBucketName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Bucket Name" />
+
+        <EditText
+            android:id="@+id/editTextBucketName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10" />
+
+        <TextView
+            android:id="@+id/textViewBucketRegion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Bucket Region" />
+
+        <EditText
+            android:id="@+id/editTextBucketRegion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10" />
+
+        <Button
+            android:id="@+id/buttonSave"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Save" />
+
+        <Button
+            android:id="@+id/buttonRestore"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Restore" />
+
+</LinearLayout>
+
