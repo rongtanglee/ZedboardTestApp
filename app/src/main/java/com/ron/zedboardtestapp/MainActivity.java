@@ -13,11 +13,14 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.zedboard.zynqutil.AppUpdater;
+import com.zedboard.zynqutil.ZedboardPreference;
+import com.zedboard.zynqutil.ZedboardUtil;
+
 import org.apache.commons.net.ntp.TimeStamp;
 
 import java.io.IOException;
 
-import static com.ron.zedboardtestapp.ZedboardUtil.queryNTPTime;
 
 public class MainActivity extends Activity {
 
@@ -58,22 +61,25 @@ public class MainActivity extends Activity {
 
         zutil.registerBatteryReceiver(MainActivity.this, batteryInfoReceiver);
 
-        boolean wifiConnected = zutil.isWiFiConnected(MainActivity.this);
+        /*boolean wifiConnected = zutil.isWiFiConnected(MainActivity.this);
         if (!wifiConnected) {
             zutil.enableWiFi(MainActivity.this);
             zutil.gotoWiFiSetting(MainActivity.this);
-        }
+        }*/
     }
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        boolean wifiConnected = zutil.isWiFiConnected(MainActivity.this);
+        /*boolean wifiConnected = zutil.isWiFiConnected(MainActivity.this);
         if (!wifiConnected) {
             zutil.enableWiFi(MainActivity.this);
             zutil.gotoWiFiSetting(MainActivity.this);
-        }
+        }*/
+
+        editTextSSID.setText(preference.getSSID());
+        editTextPassword.setText(preference.getPassword());
     }
 
     private void initUI() {
@@ -149,7 +155,7 @@ public class MainActivity extends Activity {
                 Runnable runnable = new Runnable() {
                     public void run() {
                         try {
-                            currentTime = queryNTPTime("pool.ntp.org");
+                            currentTime = zutil.queryNTPTime("pool.ntp.org");
                             Log.d(TAG, "Current Time: " + currentTime.toDateString());
                         } catch (IOException e) {
                             Log.e(TAG, "Fail to get time from NTP server");

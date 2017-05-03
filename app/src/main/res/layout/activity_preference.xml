@@ -10,7 +10,7 @@
             android:id="@+id/textViewSSID"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="SSID" />
+            android:text="@string/SSID" />
 
         <EditText
             android:id="@+id/editTextSSID"
@@ -23,7 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:password="false"
-            android:text="Password" />
+            android:text="@string/Password" />
 
         <EditText
             android:id="@+id/editTextPassword"
@@ -37,7 +37,7 @@
             android:id="@+id/textViewAccountID"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="AWS Account ID" />
+            android:text="@string/aws_account" />
 
         <EditText
             android:id="@+id/editTextAccountID"
@@ -49,7 +49,7 @@
             android:id="@+id/textViewPoolID"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="User Pool ID" />
+            android:text="@string/user_pool_id" />
 
         <EditText
             android:id="@+id/editTextUserPoolID"
@@ -61,7 +61,7 @@
             android:id="@+id/textViewPoolRegion"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Region" />
+            android:text="@string/pool_region" />
 
         <EditText
             android:id="@+id/editTextPoolRegion"
@@ -73,7 +73,7 @@
             android:id="@+id/textViewUnauthARN"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Unauth Role ARN" />
+            android:text="@string/unauth_role_arn" />
 
         <EditText
             android:id="@+id/editTextUnauthRoleARN"
@@ -85,7 +85,7 @@
             android:id="@+id/textViewAuthARN"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Auth Role ARN" />
+            android:text="@string/auth_role_arn" />
 
         <EditText
             android:id="@+id/editTextAuthRoleARN"
@@ -97,7 +97,7 @@
             android:id="@+id/textViewBucketName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Bucket Name" />
+            android:text="@string/bucket_name" />
 
         <EditText
             android:id="@+id/editTextBucketName"
@@ -109,7 +109,7 @@
             android:id="@+id/textViewBucketRegion"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Bucket Region" />
+            android:text="@string/bucket_region" />
 
         <EditText
             android:id="@+id/editTextBucketRegion"
@@ -121,13 +121,13 @@
             android:id="@+id/buttonSave"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Save" />
+            android:text="@string/save" />
 
         <Button
             android:id="@+id/buttonRestore"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Restore" />
+            android:text="@string/restore" />
 
 </LinearLayout>
 

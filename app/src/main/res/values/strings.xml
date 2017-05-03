@@ -18,4 +18,30 @@
     <string name="cancel_all">Cancel all</string>
     <string name="refreshing">Refreshing</string>
     <string name="please_wait">Please wait</string>
+
+    <string name="wifi_status">WiFi Status</string>
+    <string name="enable_wifi">Enable WiFi</string>
+    <string name="wifi_setting">WiFi Setting</string>
+
+    <string name="connect_wifi">Connect WiFi</string>
+    <string name="get_ntp_time">Get NTP Time</string>
+    <string name="update_app">Update App</string>
+    <string name="preference">Preference</string>
+
+    <string name="SSID">SSID</string>
+    <string name="Password">Password</string>
+    <string name="battery_capacity">Battery Capacity:</string>
+    <string name="current_time">Current Time:</string>
+
+    <string name="aws_account">AWS Account ID</string>
+    <string name="user_pool_id">User Pool ID</string>
+    <string name="pool_region">Pool Region</string>
+    <string name="unauth_role_arn">Unauth Role ARN</string>
+    <string name="auth_role_arn">Auth Role ARN</string>
+    <string name="bucket_name">Bucket Name</string>
+    <string name="bucket_region">Bucket Region</string>
+
+    <string name="save">Save</string>
+    <string name="restore">Restore</string>
+
 </resources>

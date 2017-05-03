@@ -7,6 +7,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.zedboard.zynqutil.ZedboardPreference;
+
 
 public class PreferenceActivity extends Activity {
 

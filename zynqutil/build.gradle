@@ -1,0 +1,50 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 25
+    buildToolsVersion "25.0.2"
+
+    defaultConfig {
+        minSdkVersion 21
+        targetSdkVersion 25
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    lintOptions {
+        abortOnError false
+    }
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    testCompile 'junit:junit:4.12'
+    compile files('libs/commons-net-3.6.jar')
+    compile files('libs/aws-android-sdk-cognito-2.4.2.jar')
+    compile files('libs/aws-android-sdk-core-2.4.2.jar')
+}
+
+
+task deleteOldJar(type: Delete) {
+    delete 'release/AndroidPlugin.jar'
+}
+
+task exportJar(type: Copy) {
+    from('build/intermediates/bundles/default/')
+    into('release/')
+    include('classes.jar')
+    rename('classes.jar', 'zedboard-zynq-util-1.0.jar')
+}
+
+exportJar.dependsOn(deleteOldJar, build)

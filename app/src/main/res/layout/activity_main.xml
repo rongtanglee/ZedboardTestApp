@@ -21,21 +21,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="WiFi Status" />
+            android:text="@string/wifi_status" />
 
         <Button
             android:id="@+id/buttonEnableWiFi"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Enable WiFi" />
+            android:text="@string/enable_wifi" />
 
         <Button
             android:id="@+id/buttonWiFiSetting"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="WiFi Setting" />
+            android:text="@string/wifi_setting" />
 
     </LinearLayout>
 
@@ -49,7 +49,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="5"
-            android:text="SSID"
+            android:text="@string/SSID"
             android:textSize="20sp" />
 
         <EditText
@@ -71,7 +71,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="5"
-            android:text="Password"
+            android:text="@string/Password"
             android:textSize="20sp" />
 
         <EditText
@@ -87,7 +87,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Connect WiFi" />
+            android:text="@string/connect_wifi" />
     </LinearLayout>
 
     <LinearLayout
@@ -100,7 +100,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Battery Capacity:"
+            android:text="@string/battery_capacity"
             android:textSize="20sp" />
 
     </LinearLayout>
@@ -115,14 +115,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Get NTP Time" />
+            android:text="@string/get_ntp_time" />
 
         <TextView
             android:id="@+id/textViewNTPTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Current Time:" />
+            android:text="@string/current_time" />
 
     </LinearLayout>
 
@@ -130,12 +130,12 @@
         android:id="@+id/buttonUpdateApp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Update App" />
+        android:text="@string/update_app" />
 
     <Button
         android:id="@+id/buttonPreference"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Preference" />
+        android:text="@string/preference" />
 
 </LinearLayout>

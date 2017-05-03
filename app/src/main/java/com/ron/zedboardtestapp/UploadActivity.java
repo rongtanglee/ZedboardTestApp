@@ -18,6 +18,9 @@ import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferType;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
+import com.zedboard.zynqutil.S3Util;
+import com.zedboard.zynqutil.ZedboardPreference;
+import com.zedboard.zynqutil.ZedboardUtil;
 
 import org.apache.commons.net.ntp.TimeStamp;
 
@@ -29,7 +32,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-import static com.ron.zedboardtestapp.ZedboardUtil.queryNTPTime;
 
 /**
  * UploadActivity is a ListActivity of uploading, and uploaded records as well
@@ -340,7 +342,7 @@ public class UploadActivity extends ListActivity {
                 Date d;
                 try {
                     //Use current time as file name postfix
-                    TimeStamp currentTime = queryNTPTime("pool.ntp.org");
+                    TimeStamp currentTime = ZedboardUtil.queryNTPTime("pool.ntp.org");
                     Log.d(TAG, "Current Time: " + currentTime.toDateString());
                     d = currentTime.getDate();
                 } catch (IOException e) {

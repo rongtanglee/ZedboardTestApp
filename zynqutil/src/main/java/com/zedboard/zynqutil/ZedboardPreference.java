@@ -1,4 +1,4 @@
-package com.ron.zedboardtestapp;
+package com.zedboard.zynqutil;
 
 import android.content.SharedPreferences;
 import android.content.Context;
