@@ -37,7 +37,7 @@ dependencies {
 
 
 task deleteOldJar(type: Delete) {
-    delete 'release/AndroidPlugin.jar'
+    delete 'release/zedboard-zynq-util-1.0.jar'
 }
 
 task exportJar(type: Copy) {

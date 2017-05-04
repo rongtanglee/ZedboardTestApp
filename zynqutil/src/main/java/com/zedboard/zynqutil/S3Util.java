@@ -2,7 +2,6 @@ package com.zedboard.zynqutil;
 
 
 import android.content.Context;
-import android.net.Uri;
 
 import com.amazonaws.auth.CognitoCachingCredentialsProvider;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
@@ -11,12 +10,7 @@ import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3Client;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Map;
-import java.util.UUID;
 
 
 public class S3Util {
@@ -87,33 +81,6 @@ public class S3Util {
         }
     }
 
-    /**
-     * Copies the data from the passed in Uri, to a new file for use with the
-     * Transfer Service
-     *
-     * @param context
-     * @param uri
-     * @return
-     * @throws IOException
-     */
-    public static File copyContentUriToFile(Context context, Uri uri) throws IOException {
-        InputStream is = context.getContentResolver().openInputStream(uri);
-        File copiedData = new File(context.getDir("SampleImagesDir", Context.MODE_PRIVATE), UUID
-                .randomUUID().toString());
-        copiedData.createNewFile();
-
-        FileOutputStream fos = new FileOutputStream(copiedData);
-        byte[] buf = new byte[2046];
-        int read = -1;
-        while ((read = is.read(buf)) != -1) {
-            fos.write(buf, 0, read);
-        }
-
-        fos.flush();
-        fos.close();
-
-        return copiedData;
-    }
 
     /*
      * Fills in the map with information in the observer so that it can be used

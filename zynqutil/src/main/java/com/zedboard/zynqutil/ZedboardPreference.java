@@ -3,9 +3,6 @@ package com.zedboard.zynqutil;
 import android.content.SharedPreferences;
 import android.content.Context;
 
-/**
- * Created by ron on 2017/4/27.
- */
 
 public class ZedboardPreference {
     private static final String prefName = "zedboard-preference";
