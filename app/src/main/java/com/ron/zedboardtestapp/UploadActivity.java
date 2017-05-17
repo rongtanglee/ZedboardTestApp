@@ -364,7 +364,7 @@ public class UploadActivity extends ListActivity {
         thread.start();
         try {
             thread.join();   //Wait PL until the file is ready
-            if (filePath != null) {
+            if (filePath != null && !filePath.equals("")) {
                 beginUpload(filePath);
             }
         } catch (InterruptedException e) {
