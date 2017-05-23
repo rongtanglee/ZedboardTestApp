@@ -6,6 +6,8 @@
     <string name="download">Download</string>
     <string name="manage_download">Manage downloads</string>
     <string name="upload">Upload</string>
+    <string name="capture_2d">2D Capture</string>
+    <string name="capture_3d">3D Capture</string>
     <string name="manage_upload">Manage uploads</string>
     <string name="upload_file">Upload a file</string>
     <string name="upload_image">Upload an image</string>
@@ -43,5 +45,14 @@
 
     <string name="save">Save</string>
     <string name="restore">Restore</string>
+
+    <string name="register">Register(hex)</string>
+    <string name="read_register">Read</string>
+
+    <string name="register_value">Value(hex)</string>
+    <string name="write_register">Write</string>
+
+    <string name="touch_x">X:</string>
+    <string name="touch_y">Y:</string>
 
 </resources>

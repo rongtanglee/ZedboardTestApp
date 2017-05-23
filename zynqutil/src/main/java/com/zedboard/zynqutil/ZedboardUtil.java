@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.wifi.ScanResult;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
 import android.os.BatteryManager;
@@ -47,12 +48,80 @@ public class ZedboardUtil {
             enableWiFi(context);
         }
 
+        WifiManager wifiMgr = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+        wifiMgr.disconnect();
+        List<ScanResult> results = wifiMgr.getScanResults();
+
+        String capability = null;
+        for (ScanResult result : results) {
+            Log.d(TAG, "SSID:" + result.SSID);
+            Log.d(TAG, "Capability:" + result.capabilities);
+
+            if (result.SSID.equals(ssid)) {
+                capability = result.capabilities;
+                Log.d(TAG, "SSID " + ssid + " found, Cap: " + capability);
+                break;
+            }
+        }
+
+        if (capability == null) {
+            Log.d(TAG, "No SSID found in scan results");
+            return;
+        }
+
         WifiConfiguration wifiConfig = new WifiConfiguration();
         wifiConfig.SSID = "\"" + ssid + "\"";
-        wifiConfig.preSharedKey = "\"" + key + "\"";
 
+        if (capability.toUpperCase().contains("WEP")) {
+            Log.d(TAG, "Configure WEP");
+//            wifiConfig.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
+//            wifiConfig.allowedProtocols.set(WifiConfiguration.Protocol.RSN);
+//            wifiConfig.allowedProtocols.set(WifiConfiguration.Protocol.WPA);
+//            wifiConfig.allowedAuthAlgorithms.set(WifiConfiguration.AuthAlgorithm.OPEN);
+//            wifiConfig.allowedAuthAlgorithms.set(WifiConfiguration.AuthAlgorithm.SHARED);
+//            wifiConfig.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.CCMP);
+//            wifiConfig.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.TKIP);
+//            wifiConfig.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.WEP40);
+//            wifiConfig.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.WEP104);
 
-        WifiManager wifiMgr = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+            if (key.matches("^[0-9a-fA-F]+$")) {
+                wifiConfig.wepKeys[0] = key;
+            } else {
+                wifiConfig.wepKeys[0] = "\"" + key + "\"";
+            }
+
+            wifiConfig.wepTxKeyIndex = 0;
+        } else if (capability.toUpperCase().contains("WPA")) {
+            Log.d(TAG, "Configure WPA/WPA2");
+
+//            wifiConfig.allowedProtocols.set(WifiConfiguration.Protocol.RSN);
+//            wifiConfig.allowedProtocols.set(WifiConfiguration.Protocol.WPA);
+//            wifiConfig.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.WPA_PSK);
+//            wifiConfig.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.CCMP);
+//            wifiConfig.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.TKIP);
+//            wifiConfig.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.WEP40);
+//            wifiConfig.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.WEP104);
+//            wifiConfig.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.CCMP);
+//            wifiConfig.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.TKIP);
+
+            wifiConfig.preSharedKey = "\"" + key + "\"";
+
+        } else {
+            Log.d(TAG, "Configure Open Network");
+
+            wifiConfig.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
+            wifiConfig.allowedProtocols.set(WifiConfiguration.Protocol.RSN);
+            wifiConfig.allowedProtocols.set(WifiConfiguration.Protocol.WPA);
+            wifiConfig.allowedAuthAlgorithms.clear();
+            wifiConfig.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.CCMP);
+            wifiConfig.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.TKIP);
+            wifiConfig.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.WEP40);
+            wifiConfig.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.WEP104);
+            wifiConfig.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.CCMP);
+            wifiConfig.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.TKIP);
+
+        }
+
         wifiMgr.addNetwork(wifiConfig);
 
         List<WifiConfiguration> list = wifiMgr.getConfiguredNetworks();

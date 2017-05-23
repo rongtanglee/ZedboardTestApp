@@ -4,9 +4,11 @@ import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.BatteryManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -34,12 +36,21 @@ public class MainActivity extends Activity {
     private Button buttonGetNTPTime;
     private Button buttonUpdateApp;
     private Button buttonPreference;
+    private Button buttonReadRegister;
+    private Button buttonWriteRegister;
+    private Button button2DCapture;
+    private Button button3DCapture;
 
     private EditText editTextSSID;
     private EditText editTextPassword;
+    private EditText editTextRegisterAddress;
+    private EditText editTextRegisterValue;
 
     private TextView textViewBatteryCapacity;
     private TextView textViewNTPTime;
+
+    private TextView textViewTouchX;
+    private TextView textViewTouchY;
 
     private ZedboardUtil zutil;
     private ZedboardPreference preference;
@@ -47,7 +58,7 @@ public class MainActivity extends Activity {
     private boolean batteryIsCharging = false;
     private long batteryCapacity = 0;
 
-    private TimeStamp currentTime;
+    private PLContentProvider provider;
 
 
     @Override
@@ -56,10 +67,11 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         zutil = new ZedboardUtil();
         preference = new ZedboardPreference(MainActivity.this);
+        provider = PLContentProvider.getInstance();
         initUI();
         setupListener();
 
-        zutil.registerBatteryReceiver(MainActivity.this, batteryInfoReceiver);
+
 
         /*boolean wifiConnected = zutil.isWiFiConnected(MainActivity.this);
         if (!wifiConnected) {
@@ -78,12 +90,24 @@ public class MainActivity extends Activity {
             zutil.gotoWiFiSetting(MainActivity.this);
         }*/
 
+        buttonUpload.setEnabled(false);
+
         editTextSSID.setText(preference.getSSID());
         editTextPassword.setText(preference.getPassword());
+
+        zutil.registerBatteryReceiver(MainActivity.this, batteryInfoReceiver);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        unregisterReceiver(batteryInfoReceiver);
     }
 
     private void initUI() {
         buttonUpload = (Button) findViewById(R.id.buttonUpload);
+        buttonUpload.setEnabled(false);
 
         buttonWiFiStatus = (Button) findViewById(R.id.buttonWiFiStatus);
         buttonEnableWiFi = (Button) findViewById(R.id.buttonEnableWiFi);
@@ -92,14 +116,25 @@ public class MainActivity extends Activity {
         buttonGetNTPTime = (Button) findViewById(R.id.buttonGetNTPTime);
         buttonUpdateApp = (Button) findViewById(R.id.buttonUpdateApp);
         buttonPreference = (Button) findViewById(R.id.buttonPreference);
+        buttonReadRegister = (Button) findViewById(R.id.buttonReadRegister);
+        buttonWriteRegister = (Button) findViewById(R.id.buttonWriteRegister);
+
+        button2DCapture = (Button) findViewById(R.id.button2DCapture);
+        button3DCapture = (Button) findViewById(R.id.button3DCapture);
 
         editTextSSID = (EditText) findViewById(R.id.editTextSSID);
         editTextPassword = (EditText) findViewById(R.id.editTextPassword);
         editTextSSID.setText(preference.getSSID());
         editTextPassword.setText(preference.getPassword());
 
+        editTextRegisterAddress = (EditText) findViewById(R.id.editTextRegister);
+        editTextRegisterValue = (EditText) findViewById(R.id.editTextValue);
+
         textViewBatteryCapacity= (TextView) findViewById(R.id.textViewBatteryCapacity);
         textViewBatteryCapacity.setText("Battery Capacity:" + zutil.getBatteryCapacity(MainActivity.this));
+
+        textViewTouchX = (TextView) findViewById(R.id.textViewTouchX);
+        textViewTouchY = (TextView) findViewById(R.id.textViewTouchY);
 
         textViewNTPTime = (TextView) findViewById(R.id.textViewNTPTime);
     }
@@ -109,6 +144,8 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, UploadActivity.class);
+                String filePath = provider.getCurrentContentFile();
+                intent.putExtra("FILE_PATH", filePath);
                 startActivity(intent);
             }
         });
@@ -152,27 +189,32 @@ public class MainActivity extends Activity {
         buttonGetNTPTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Runnable runnable = new Runnable() {
-                    public void run() {
+
+                class NTPTask extends AsyncTask<String, Void, TimeStamp> {
+                    @Override
+                    protected TimeStamp doInBackground(String... strings) {
+                        String ntpServer = strings[0];
+                        TimeStamp currentTime = null;
                         try {
-                            currentTime = zutil.queryNTPTime("pool.ntp.org");
+                            currentTime = zutil.queryNTPTime(ntpServer);
                             Log.d(TAG, "Current Time: " + currentTime.toDateString());
                         } catch (IOException e) {
                             Log.e(TAG, "Fail to get time from NTP server");
-                            return;
+                            currentTime = null;
+                        }
+                        return currentTime;
+                    }
+
+                    @Override
+                    protected void onPostExecute(TimeStamp timeStamp) {
+                        if (timeStamp != null) {
+                            textViewNTPTime.setText("Current Time: " + timeStamp.toDateString());
+                            Toast.makeText(getApplicationContext(), "Current Time: " + timeStamp.toDateString(), Toast.LENGTH_SHORT).show();
                         }
                     }
-                };
-
-                Thread thread = new Thread(runnable);
-                thread.start();
-                try {
-                    thread.join();
-                    textViewNTPTime.setText("Current Time: " + currentTime.toDateString());
-                    Toast.makeText(getApplicationContext(), "Current Time: " + currentTime.toDateString(), Toast.LENGTH_SHORT).show();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
                 }
+
+                new NTPTask().execute("pool.ntp.org");
             }
         });
 
@@ -194,7 +236,83 @@ public class MainActivity extends Activity {
             }
         });
 
+        buttonReadRegister.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                long address;
+                long value;
 
+                try {
+                    address = Long.parseLong(editTextRegisterAddress.getText().toString(), 16);
+                } catch (NumberFormatException e) {
+                    Log.e(TAG, "Invalid register address format");
+                    Toast.makeText(MainActivity.this, "Invalid register address format", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                value = provider.readRegister(address);
+                if (value < 0) {
+                    Log.e(TAG, "Could not get value");
+                    Toast.makeText(MainActivity.this, "Could not get value", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                editTextRegisterValue.setText(Long.toHexString(value));
+                Toast.makeText(MainActivity.this, String.format("Read register %08x with %08x", address, value), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        buttonWriteRegister.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                long address;
+                long value;
+                int result;
+
+                try {
+                    address = Long.parseLong(editTextRegisterAddress.getText().toString(), 16);
+                    value = Long.parseLong(editTextRegisterValue.getText().toString(), 16);
+                } catch (NumberFormatException e) {
+                    Log.e(TAG, "Invalid register address or value format");
+                    Toast.makeText(MainActivity.this, "Invalid register address or value format", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                result = provider.writeRegister(address, value);
+                if (result == 0) {
+                    Toast.makeText(MainActivity.this, String.format("Writed register %08x with %08x", address, value), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        button2DCapture.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                buttonUpload.setEnabled(false);
+                button2DCapture.setEnabled(false);
+                button3DCapture.setEnabled(false);
+                provider.start2DCapture(MainActivity.this);
+            }
+        });
+
+        button3DCapture.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                buttonUpload.setEnabled(false);
+                button2DCapture.setEnabled(false);
+                button3DCapture.setEnabled(false);
+                provider.start3DCapture(MainActivity.this);
+            }
+        });
+
+
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        int x = (int) event.getX();
+        int y = (int) event.getY();
+
+        textViewTouchX.setText("X=" + x);
+        textViewTouchY.setText("Y=" + y);
+        return super.onTouchEvent(event);
     }
 
     private BroadcastReceiver batteryInfoReceiver = new BroadcastReceiver() {
@@ -214,7 +332,6 @@ public class MainActivity extends Activity {
         String  technology= intent.getExtras().getString(BatteryManager.EXTRA_TECHNOLOGY);
         int  temperature= intent.getIntExtra(BatteryManager.EXTRA_TEMPERATURE,0);
         int  voltage= intent.getIntExtra(BatteryManager.EXTRA_VOLTAGE,0);
-
 
         Log.d(TAG, "Health: "+health+"\n"
                 + "Level: "+level + "\n"

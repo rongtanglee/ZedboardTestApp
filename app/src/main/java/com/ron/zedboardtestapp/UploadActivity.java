@@ -20,15 +20,9 @@ import com.amazonaws.mobileconnectors.s3.transferutility.TransferType;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
 import com.zedboard.zynqutil.S3Util;
 import com.zedboard.zynqutil.ZedboardPreference;
-import com.zedboard.zynqutil.ZedboardUtil;
-
-import org.apache.commons.net.ntp.TimeStamp;
 
 import java.io.File;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -78,6 +72,12 @@ public class UploadActivity extends ListActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_upload);
+
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            filePath = extras.getString("FILE_PATH");
+            Log.d(TAG, "filePath=" + filePath);
+        }
 
         // Initializes TransferUtility, always do this before using it.
         transferUtility = S3Util.getTransferUtility(this);
@@ -333,45 +333,10 @@ public class UploadActivity extends ListActivity {
         btnDelete.setEnabled(availability);
     }
 
-
     private void uploadPLImage() {
-        filePath = null;
-        Runnable runnable = new Runnable() {
-            public void run() {
-
-                Date d;
-                try {
-                    //Use current time as file name postfix
-                    TimeStamp currentTime = ZedboardUtil.queryNTPTime("pool.ntp.org");
-                    Log.d(TAG, "Current Time: " + currentTime.toDateString());
-                    d = currentTime.getDate();
-                } catch (IOException e) {
-                    Log.e(TAG, "Fail to get time from NTP server");
-                    d = new Date();  //get current date/time
-                }
-                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd-HHmmss");
-                String postfix = dateFormat.format(d);
-
-                PLContentProvider provider = new PLContentProvider();
-                int result = provider.capture();
-                if (result == 1) {
-                    filePath = provider.getFilePath(postfix);
-                }
-            }
-        };
-
-        Thread thread = new Thread(runnable);
-        thread.start();
-        try {
-            thread.join();   //Wait PL until the file is ready
-            if (filePath != null && !filePath.equals("")) {
-                beginUpload(filePath);
-            }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        if (filePath != null && !filePath.equals("")) {
+            beginUpload(filePath);
         }
-
-
     }
 
     /*
